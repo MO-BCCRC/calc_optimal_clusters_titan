@@ -46,6 +46,7 @@ class OptimalClustersTitan(object):
                 case = self.args.sample_id
 
             out[case].append(fname)
+
         return out
 
     def __get_clusters(self, case_dict):
@@ -58,6 +59,8 @@ class OptimalClustersTitan(object):
                     line = line.strip().split(':')
                     if 'Clonal cluster cellular prevalence' in line[0].strip():
                         num_clus = len(line[1].split())
+                    if 'Average tumour ploidy estimate' in line[0].strip():
+                        ploidy = line[1].strip()
 
                     elif line[0].strip() == 'S_Dbw validity index (Both)':
                         if line[1].strip() == 'NaN':
@@ -67,7 +70,7 @@ class OptimalClustersTitan(object):
                             idx = eval(line[1])
                 if not all((num_clus, idx)):
                     raise Exception('couldn\'t retrieve the num_clusters and validity_index from the params file' )
-                cluster_out[case][num_clus] = idx
+                cluster_out[case][(num_clus,ploidy)] = idx
                 fname_reader.close()
 
         return cluster_out
@@ -75,8 +78,9 @@ class OptimalClustersTitan(object):
     def __write(self, opt_clus):
         outfile = open(self.args.output, 'w')
         for case, clus_dict in opt_clus.iteritems():
-            for num_clus, idx in clus_dict.iteritems():
-                outfile.write(' '.join(map(str,['case:', case, 'num_clusters:', num_clus, 'DBW validity index:', idx]))+'\n')
+            for key, idx in clus_dict.iteritems():
+                num_clus, ploidy = key
+                outfile.write(' '.join(map(str,['case:', case, 'num_clusters:', num_clus, 'Ploidy:', ploidy, 'DBW validity index:', idx]))+'\n')
             
             optimal = min([val for val in clus_dict.itervalues() if val != 'NaN'])
             optclus = [val[0] for val in clus_dict.iteritems() if val[1]==optimal]
