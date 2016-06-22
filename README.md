@@ -10,7 +10,7 @@ Developer    : Diljot Grewal (dgrewal@bccrc.ca)
 Input        : file
 Output       : 
 Seed used    : 
-
+version: 1.0.1-1.0.2
 ```
 
 
@@ -37,3 +37,7 @@ The behaviour of this components is equivalent to this command :
 v1.0.1 The seed now handles NaN values 
 
 
+
+
+### ChangeLog
+* 1.0.1-1.0.2: added test config

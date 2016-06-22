@@ -1,0 +1,12 @@
+make_cmd_tests:
+  normal_pipeline_args:
+    args:
+      input_dir: __REQUIRED__
+      output: __REQUIRED__
+      sample_id: null
+    chunk: null
+    output:
+      cmd: python component_seed/optimal_clusters.py
+      cmd_args:
+      - -i __REQUIRED__
+      - -o __REQUIRED__
